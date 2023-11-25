@@ -6,8 +6,20 @@
     <description>Recent content in Posts on 白熊 Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 25 Nov 2023 08:59:58 +0800</lastBuildDate>
+    <lastBuildDate>Sat, 25 Nov 2023 10:47:08 +0800</lastBuildDate>
     <atom:link href="https://graduatehan.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hello Hugo</title>
+      <link>https://graduatehan.github.io/post/hello-hugo/</link>
+      <pubDate>Sat, 25 Nov 2023 10:47:08 +0800</pubDate>
+      <guid>https://graduatehan.github.io/post/hello-hugo/</guid>
+      <description>1. HUGO 安装 官网：https://gohugo.io/installation/windows/
+下述已 Windows 为例，其他系统类似。
+1.1 版本 有两个版本：standard and extended
+扩展版（extended）功能更强大，推荐安装。
+1.2 安装方式 二进制安装包（推荐，最简单） 下载地址：https://github.com/gohugoio/hugo/releases/latest 根据操作系统选择对应版本即可，如 hugo_extended_0.120.4_windows-amd64.zip 包管理器安装，例如 Winget，略 源码编译，略 2. 使用前的准备工作 2.1 Hugo 添加环境变量 下载安装包解压即可使用，将解压路径添加到环境变量。例如：D:\hugo_extended_0.120.4_windows-amd64
+2.2 Git 安装及设置 2.2.1 下载安装 官网下载 https://git-scm.com/downloads 使用包管理器下载 2.2.2 配置 # 配置用户名以及邮箱 git config --global user.name &amp;#34;Your Name&amp;#34; git config --global user.email &amp;#34;邮箱&amp;#34; # 查看是否配置成功 git config --global --list # 生成密钥（默认生成 ~/.ssh 目录下），用于免密连接 github ssh-keygen -t rsa -C &amp;#34;邮箱&amp;#34; # 登录github -&amp;gt;进入设置-&amp;gt;SSH and GPG key -&amp;gt;新建密钥，将id_rsa.</description>
+    </item>
     <item>
       <title>Linux Shell 命令—— awk、sed</title>
       <link>https://graduatehan.github.io/post/linuxshell-awksed/</link>
