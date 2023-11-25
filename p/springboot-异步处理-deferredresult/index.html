@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='1. 背景 工作中有遇到这样的问题： 服务的一个接口 A 依赖的第三方接口耗时不稳定，导致接口 A 耗时有时会较高。如何做能避免出现接口 A 耗时高且并发量大时'>
+<title>SpringBoot 异步处理—— DeferredResult</title>
+
+<link rel='canonical' href='https://graduatehan.github.io/p/springboot-%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86-deferredresult/'>
+
+<link rel="stylesheet" href="/scss/style.min.24ef1cc321916467896e8c70c10c0ad7b98c2a8df14298032fb637216e397f50.css"><meta property='og:title' content='SpringBoot 异步处理—— DeferredResult'>
+<meta property='og:description' content='1. 背景 工作中有遇到这样的问题： 服务的一个接口 A 依赖的第三方接口耗时不稳定，导致接口 A 耗时有时会较高。如何做能避免出现接口 A 耗时高且并发量大时'>
+<meta property='og:url' content='https://graduatehan.github.io/p/springboot-%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86-deferredresult/'>
+<meta property='og:site_name' content='大白熊&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='DeferredResult' /><meta property='article:tag' content='延迟处理' /><meta property='article:published_time' content='2023-11-25T08:59:58&#43;08:00'/><meta property='article:modified_time' content='2023-11-25T08:59:58&#43;08:00'/>
+<meta name="twitter:title" content="SpringBoot 异步处理—— DeferredResult">
+<meta name="twitter:description" content="1. 背景 工作中有遇到这样的问题： 服务的一个接口 A 依赖的第三方接口耗时不稳定，导致接口 A 耗时有时会较高。如何做能避免出现接口 A 耗时高且并发量大时">
+    <link rel="shortcut icon" href="/favicon.jpg" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/avatar_hu8c6d6e92b54653c2938e45925a86c552_60521_300x0_resize_q75_box.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">大白熊&#39;s Blog</a></h1>
+            <h2 class="site-description">好好学习，天天向上！</h2>
+        </div>
+    </header><ol class="social-menu">
+            
+                <li>
+                    <a 
+                        href='https://github.com/CaiJimmy/hugo-theme-stack'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/post/' >
+                
+                
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/categories/' >
+                
+                
+                
+                <span>分类</span>
+            </a>
+        </li>
+        
+
+        <div class="menu-bottom-section">
+            
+            
+                <li id="dark-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                    <span>Dark Mode</span>
+                </li>
+            
+        </div>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-背景">1. 背景</a></li>
+    <li><a href="#2-deferredresult-简介">2. DeferredResult 简介</a></li>
+    <li><a href="#3-deferredresult-应用实验">3. DeferredResult 应用实验</a>
+      <ol>
+        <li><a href="#31-实验代码">3.1 实验代码</a></li>
+        <li><a href="#32-手动单次调用">3.2 手动单次调用</a></li>
+        <li><a href="#33-使用-jmeter-压测">3.3 使用 Jmeter 压测</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-deferredresult-请求处理流程分析">4. DeferredResult 请求处理流程分析</a></li>
+    <li><a href="#5-总结">5. 总结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/springboot/" >
+                SpringBoot
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/springboot-%E5%BC%82%E6%AD%A5%E5%A4%84%E7%90%86-deferredresult/">SpringBoot 异步处理—— DeferredResult</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">Nov 25, 2023</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    4 minute read
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-背景">1. 背景</h2>
+<p>工作中有遇到这样的问题： 服务的一个接口 A 依赖的第三方接口耗时不稳定，导致接口 A 耗时有时会较高。如何做能避免出现接口 A 耗时高且并发量大时候，不影响服务的其他接口？使用 Hystrix 的熔断机制是可以的。因为服务是使用 SpringBoot 框架开发的，能不能不引入额外框架，通过 SpringBoot 提供的特性解决上面的问题呢？可以！ 即应用 SpringBoot 异步处理机制—— DeferredResult 。</p>
+<h2 id="2-deferredresult-简介">2. DeferredResult 简介</h2>
+<p>DeferredResult 是 SpringBoot 中一种异步处理 HTTP 请求的方式，基于 Servlet 3.0 规范中的异步请求处理机制。它可以把请求处理委托给另外的线程，<strong>释放 Servlet 容器</strong>（如 Tomcat 容器、Undertow 容器等）<strong>线程</strong>。容器线程可以继续处理其他请求，从而可以有效提高服务吞吐量，提高服务性能。</p>
+<p>对背景中提到的问题，可以通过自定义线程池处理接口 A 的请求，做到 接口 A 和服务其他接口在线程池级别的隔离，避免相互影响。</p>
+<h2 id="3-deferredresult-应用实验">3. DeferredResult 应用实验</h2>
+<h3 id="31-实验代码">3.1 实验代码</h3>
+<p>请求处理 Service 如下，模拟 2s 的请求处理耗时</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyService</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">process</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 模拟请求处理耗时 2s</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">.</span><span class="na">sleep</span><span class="p">(</span><span class="n">2</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">ignored</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&#34;success&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>同步接口调用 Service 方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Resource</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">private</span><span class="w"> </span><span class="n">MyService</span><span class="w"> </span><span class="n">myService</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&#34;/sync&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">sync</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">myService</span><span class="p">.</span><span class="na">process</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用 DeferredResult 的异步接口调用 Service 方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&#34;/async&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="n">DeferredResult</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="nf">async</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">DeferredResult</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deferredResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DeferredResult</span><span class="o">&lt;&gt;</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 将请求处理委托给线程池</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">deferredProcess</span><span class="p">(</span><span class="n">executorService</span><span class="p">,</span><span class="w"> </span><span class="n">myService</span><span class="p">::</span><span class="n">process</span><span class="p">,</span><span class="w"> </span><span class="n">deferredResult</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;asyncMethod&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">deferredResult</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cm">/**
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * 异步处理
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param executor 执行请求处理任务的线程池
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param supplier 要执行的方法
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param deferredResult deferredResult对象
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param interfaceName 接口名，用于监控上报和日志打印
+</span></span></span><span class="line"><span class="cl"><span class="cm"> * @param &lt;T&gt; 执行方法的返回值泛型
+</span></span></span><span class="line"><span class="cl"><span class="cm"> */</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">deferredProcess</span><span class="p">(</span><span class="n">ExecutorService</span><span class="w"> </span><span class="n">executor</span><span class="p">,</span><span class="w"> </span><span class="n">Supplier</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">supplier</span><span class="p">,</span><span class="w"> </span><span class="n">DeferredResult</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deferredResult</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">interfaceName</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">executor</span><span class="p">.</span><span class="na">submit</span><span class="p">(()</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">startTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">T</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">supplier</span><span class="p">.</span><span class="na">get</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 设置正常返回结果</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">deferredResult</span><span class="p">.</span><span class="na">setResult</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">logger</span><span class="p">.</span><span class="na">info</span><span class="p">(</span><span class="s">&#34;{} spend {} ms&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">interfaceName</span><span class="p">,</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">currentTimeMillis</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">startTime</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">logger</span><span class="p">.</span><span class="na">error</span><span class="p">(</span><span class="s">&#34;{} error e:&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">interfaceName</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="c1">// 设置异常返回结果</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">deferredResult</span><span class="p">.</span><span class="na">setErrorResult</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">getMessage</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">});</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="32-手动单次调用">3.2 手动单次调用</h3>
+<p>同步接口调用，耗时 2.023s</p>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306082205955.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230608下午100546908"
+	
+	
+></p>
+<p>服务日志：</p>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306082107485.png"
+	
+	
+	
+	loading="lazy"
+	
+	
+></p>
+<p>异步接口调用，耗时 2.034s</p>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306082207521.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230608下午100755474"
+	
+	
+></p>
+<p>服务日志：</p>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306082111734.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230608下午91123691"
+	
+	
+></p>
+<p>从日志第五列（线程名称）中可以看到，调用同步接口期间，Tomcat 容器线程一直在工作。 调用异步接口期间，Tomcat容器线程被释放。</p>
+<h3 id="33-使用-jmeter-压测">3.3 使用 Jmeter 压测</h3>
+<p>引入 没有逻辑的 alive 接口，测试请求高并发时，同步接口和异步接口对服务提供的其他接口的影响</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">@GetMapping(&#34;/alive&#34;)
+</span></span><span class="line"><span class="cl">public String alive() {
+</span></span><span class="line"><span class="cl">    return &#34;alive&#34;;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>application.yaml 配置</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">server</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8080</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tomcat</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">max-threads</span><span class="p">:</span><span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="c"># 设置 Tomcat 容器最大线程数</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">debug</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>设置对照实验：</p>
+<p>实验一：使用 50 个线程并发访问 sync 接口 200次，同时使用 50 个线程并发访问 alive 接口 200次</p>
+<p>实验二：使用 50 个线程并发访问 async 接口 200次，同时使用 50 个线程并发访问 alive 接口 200次</p>
+<p>各接口测试聚合报告如下：</p>
+<p>实验一 sync 接口测试聚合报告</p>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306082146066.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230608下午94644021"
+	
+	
+></p>
+<p>实验一 alive接口测试聚合报告</p>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306082147659.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230608下午94706622"
+	
+	
+></p>
+<p>实验二 async 接口测试聚合报告</p>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306082142043.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230608下午94244993"
+	
+	
+></p>
+<p>实验二 alive 接口测试聚合报告</p>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306082143735.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230608下午94324681"
+	
+	
+></p>
+<p>为了更加直观的展示结果，从聚合报告中选择平均耗时、最小耗时、最大耗时三个指标汇总如下：</p>
+<div class="table-wrapper"><table>
+<thead>
+<tr>
+<th></th>
+<th>平均耗时（ms）</th>
+<th>最小耗时（ms）</th>
+<th>最大耗时（ms）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>实验一 sync 接口</td>
+<td>8668</td>
+<td>2004</td>
+<td>12047</td>
+</tr>
+<tr>
+<td>实验一 alive 接口</td>
+<td>8846</td>
+<td>1</td>
+<td>10051</td>
+</tr>
+<tr>
+<td>实验二 async 接口</td>
+<td>2020</td>
+<td>2003</td>
+<td>2046</td>
+</tr>
+<tr>
+<td>实验二 alive 接口</td>
+<td>45</td>
+<td>0</td>
+<td>149</td>
+</tr>
+</tbody>
+</table></div>
+<p>可以看出，相同的请求量和并发量，异步接口的耗时表现明显优于同步接口，对服务其他接口的影响异步接口同样明显优于同步接口。异步接口在请求到达和返回结果时，毕竟也使用了 Tomcat 容器线程，所以并发量大时，对其他接口还是有影响，但影响明显小于同步接口的影响。</p>
+<h2 id="4-deferredresult-请求处理流程分析">4. DeferredResult 请求处理流程分析</h2>
+<p>一次 DeferredResult 接口调用日志如下：</p>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306092018527.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230609下午73549575"
+	
+	
+></p>
+<p>结合日志，分析 DeferredResult 请求处理如下：</p>
+<ol>
+<li>客户端发送请求到 DispatchServlet （日志第 1 行）</li>
+<li>通过映射器处理器 HandlerMapping 找到对应的控制器 Controller 方法 （日志第 2 行）</li>
+<li>反射调用控制器方法处理请求（日志第 3-4 行）</li>
+<li>根据控制器方法返回值类型，调用相应的 ReturnValueHandler。通过代码调试可以看到，对于 DeferredResult 返回值类型，调用的 ReturnValueHandler  为 DeferredResultMethodReturnValueHandler</li>
+</ol>
+<p><img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202306092011486.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="image-20230609下午81146426"
+	
+	
+></p>
+<ol start="5">
+<li>DeferredResultMethodReturnValueHandler 中 handleReturnValue 方法 会获取 请求的 WebAsyncManager 并调用 WebAsyncManager 的 startDeferredResultProcessing 方法，开启异步处理。此时容器线程释放，但客户端请求链接没有释放（日志第 5 行）</li>
+<li>自定义线程处理完请求后，调用 deferredResult 的 setResult 方法，setResult 方法 中会回调 在 WebAsyncManager 设置的 resultHandler 方法（日志第 7-9 行）</li>
+<li>resultHandler 方法会将请求结果存在 WebAsyncManager 的 concurrentResult 属性中，并重新触发 dispatch （此时 Tomcat 线程 已经和 之前请求使用Tomcat 线程 不是同一个了）。</li>
+<li>请求再次进来时，WebAsyncManager 的 concurrentResult 属性中已经存在请求响应结果（日志第 11 行）</li>
+<li>不再反射调用控制器方法，将响应结果返回给客户端</li>
+</ol>
+<h2 id="5-总结">5. 总结</h2>
+<p>简单总结，SpringBoot 的 Controller 方法返回值如果为 DeferredResult 类型，则不会把返回值作为响应返回给调用方，容器线程会被释放，DeferredResult 设置结果后，设置的结果才会作为响应返回给调用方。</p>
+<p>实现原理为，每一次请求都对应一个唯一的 WebAsyncManager 对象，DeferredResult 的  setResult 方法调用后，响应结果缓存在了 WebAsyncManager 中，同时会再次触发 doDispatch 方法。再次触发请求时，发现 WebAsyncManager 已经存在响应结果，会直接返回响应结果。</p>
+<p>最后，感谢阅读，如果有写的不妥的地方，欢迎评论区批评指正。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/deferredresult/">DeferredResult</a>
+        
+            <a href="/tags/%E5%BB%B6%E8%BF%9F%E5%A4%84%E7%90%86/">延迟处理</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.css"integrity="sha256-J&#43;iAE0sgH8QSz9hpcDxXIftnj65JEZgNhGcgReTTK9s="crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/katex.min.js"integrity="sha256-InsNdER1b2xUewP&#43;pKCUJpkhiqwHgqiPXDlIk7GzBu4="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.15.6/dist/contrib/auto-render.min.js"integrity="sha256-y39Mpg7V3D4lhBX4x6O0bUqTV4pSrfgwEfGKfxkOdgI="crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        renderMathInElement(document.querySelector(`.article-content`), {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2021 - 
+        
+        2023 大白熊&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.21.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
