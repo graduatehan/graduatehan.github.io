@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "main.css",
-	"sourceRoot": "D:/hugo_extended_0.120.4_windows-amd64/quickstart",
+	"sourceRoot": "D:/hugo_extended_0.120.4_windows-amd64/my_blog",
 	"sources": [
 		"ananke/css/main.css"
 	],
