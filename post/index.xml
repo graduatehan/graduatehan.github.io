@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on 白熊 Blog</title>
+    <link>https://graduatehan.github.io/post/</link>
+    <description>Recent content in Posts on 白熊 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sat, 25 Nov 2023 08:59:58 +0800</lastBuildDate>
+    <atom:link href="https://graduatehan.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux Shell 命令—— awk、sed</title>
+      <link>https://graduatehan.github.io/post/awksed%E5%91%BD%E4%BB%A4/</link>
+      <pubDate>Sat, 25 Nov 2023 08:59:58 +0800</pubDate>
+      <guid>https://graduatehan.github.io/post/awksed%E5%91%BD%E4%BB%A4/</guid>
+      <description>1. 引言 1.1 工作中遇到场景 将运营同学给的名单转成Json列表格式 遇到特殊情况需要做MDL 1.2 解决方式：多行编辑 以转Json列表格式为例
+1.2.1 全文编辑器 sublime text ：多行编辑快捷键
+快捷键： cmd+A -&amp;gt; shift+cmd+L -&amp;gt; &amp;quot; -&amp;gt; cmd+右箭头 -&amp;gt; , 解释： 选中全部 -&amp;gt; 光标定位到选中行(选中状态) -&amp;gt; 选中文本加引号 -&amp;gt; 光标定位到行尾 -&amp;gt; 插入逗号 vim ： 宏录制重放
+录制 : qa -&amp;gt; I -&amp;gt; &amp;quot; -&amp;gt; esc -&amp;gt; A -&amp;gt; &amp;quot;,-&amp;gt; esc -&amp;gt;q 解释：开启录制 -&amp;gt; 行首插入 -&amp;gt; 引号 -&amp;gt; 返回normal模式 -&amp;gt; 行尾插入 -&amp;gt; 引号逗号 -&amp;gt; 返回normal模式 -&amp;gt; 结束录制 回放：V -&amp;gt; G -&amp;gt; : -&amp;gt; normal @a 解释：选中光标行进入可视行模式 -&amp;gt; 选中至文尾 -&amp;gt; 单行命令模式 -&amp;gt; 重放宏 其他文本编辑器。。。</description>
+    </item>
+    <item>
+      <title>SpringBoot 异步处理—— DeferredResult</title>
+      <link>https://graduatehan.github.io/post/deferredresult/</link>
+      <pubDate>Sat, 25 Nov 2023 08:59:58 +0800</pubDate>
+      <guid>https://graduatehan.github.io/post/deferredresult/</guid>
+      <description>1. 背景 工作中有遇到这样的问题： 服务的一个接口 A 依赖的第三方接口耗时不稳定，导致接口 A 耗时有时会较高。如何做能避免出现接口 A 耗时高且并发量大时候，不影响服务的其他接口？使用 Hystrix 的熔断机制是可以的。因为服务是使用 SpringBoot 框架开发的，能不能不引入额外框架，通过 SpringBoot 提供的特性解决上面的问题呢？可以！ 即应用 SpringBoot 异步处理机制—— DeferredResult 。
+2. DeferredResult 简介 DeferredResult 是 SpringBoot 中一种异步处理 HTTP 请求的方式，基于 Servlet 3.0 规范中的异步请求处理机制。它可以把请求处理委托给另外的线程，释放 Servlet 容器（如 Tomcat 容器、Undertow 容器等）线程。容器线程可以继续处理其他请求，从而可以有效提高服务吞吐量，提高服务性能。
+对背景中提到的问题，可以通过自定义线程池处理接口 A 的请求，做到 接口 A 和服务其他接口在线程池级别的隔离，避免相互影响。
+3. DeferredResult 应用实验 3.1 实验代码 请求处理 Service 如下，模拟 2s 的请求处理耗时
+@Service public class MyService { public String process() { try { // 模拟请求处理耗时 2s TimeUnit.SECONDS.sleep(2); } catch (Exception ignored) { } return &amp;#34;success&amp;#34;; } } 同步接口调用 Service 方法</description>
+    </item>
+  </channel>
+</rss>
