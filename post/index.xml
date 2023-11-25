@@ -14,13 +14,13 @@
         <pubDate>Sat, 25 Nov 2023 10:47:08 +0800</pubDate>
         <author>xxx@gmail.com (白熊)</author>
         <guid>https://graduatehan.github.io/p/hello-hugo/</guid>
-        <description>&lt;h1 id=&#34;1-hugo-安装&#34;&gt;1. HUGO 安装&lt;/h1&gt;
+        <description>&lt;h2 id=&#34;1-hugo-安装&#34;&gt;1. HUGO 安装&lt;/h2&gt;
 &lt;p&gt;官网：https://gohugo.io/installation/windows/&lt;/p&gt;
 &lt;p&gt;下述已 Windows 为例，其他系统类似。&lt;/p&gt;
-&lt;h2 id=&#34;11-版本&#34;&gt;1.1 版本&lt;/h2&gt;
+&lt;h3 id=&#34;11-版本&#34;&gt;1.1 版本&lt;/h3&gt;
 &lt;p&gt;有两个版本：standard  and extended&lt;/p&gt;
 &lt;p&gt;扩展版（extended）功能更强大，推荐安装。&lt;/p&gt;
-&lt;h2 id=&#34;12-安装方式&#34;&gt;1.2 安装方式&lt;/h2&gt;
+&lt;h3 id=&#34;12-安装方式&#34;&gt;1.2 安装方式&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;二进制安装包（推荐，最简单）
 &lt;ol&gt;
@@ -31,17 +31,17 @@
 &lt;li&gt;包管理器安装，例如 &lt;code&gt;Winget&lt;/code&gt;，略&lt;/li&gt;
 &lt;li&gt;源码编译，略&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h1 id=&#34;2-使用前的准备工作&#34;&gt;2. 使用前的准备工作&lt;/h1&gt;
-&lt;h2 id=&#34;21-hugo-添加环境变量&#34;&gt;2.1 Hugo 添加环境变量&lt;/h2&gt;
+&lt;h2 id=&#34;2-使用前的准备工作&#34;&gt;2. 使用前的准备工作&lt;/h2&gt;
+&lt;h3 id=&#34;21-hugo-添加环境变量&#34;&gt;2.1 Hugo 添加环境变量&lt;/h3&gt;
 &lt;p&gt;下载安装包解压即可使用，将解压路径添加到环境变量。例如：&lt;code&gt;D:\hugo_extended_0.120.4_windows-amd64&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;22-git-安装及设置&#34;&gt;2.2 Git 安装及设置&lt;/h2&gt;
-&lt;h3 id=&#34;221-下载安装&#34;&gt;2.2.1 下载安装&lt;/h3&gt;
+&lt;h3 id=&#34;22-git-安装及设置&#34;&gt;2.2 Git 安装及设置&lt;/h3&gt;
+&lt;h4 id=&#34;221-下载安装&#34;&gt;2.2.1 下载安装&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;官网下载  &lt;a class=&#34;link&#34; href=&#34;https://git-scm.com/downloads&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://git-scm.com/downloads&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;使用包管理器下载&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;222-配置&#34;&gt;2.2.2 配置&lt;/h3&gt;
+&lt;h4 id=&#34;222-配置&#34;&gt;2.2.2 配置&lt;/h4&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
@@ -70,7 +70,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ssh -T git@github.com
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;h2 id=&#34;23-提醒&#34;&gt;2.3 提醒&lt;/h2&gt;
+&lt;/div&gt;&lt;h3 id=&#34;23-提醒&#34;&gt;2.3 提醒&lt;/h3&gt;
 &lt;p&gt;如果使用  Windows :&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;请勿使用 &lt;code&gt;cmd&lt;/code&gt;  or  &lt;code&gt;Windows PowerShell&lt;/code&gt; 执行下面命令。&lt;/li&gt;
@@ -78,7 +78,7 @@
 &lt;/ol&gt;
 &lt;p&gt;注： &lt;code&gt;PowerShell&lt;/code&gt; and &lt;code&gt;Windows PowerShell&lt;/code&gt; &lt;a class=&#34;link&#34; href=&#34;https://learn.microsoft.com/en-us/powershell/scripting/whats-new/differences-from-windows-powershell?view=powershell-7.3&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;are different applications&lt;/a&gt;.&lt;/p&gt;
-&lt;h1 id=&#34;3-使用-hugo-创建博客&#34;&gt;3. 使用 HUGO 创建博客&lt;/h1&gt;
+&lt;h2 id=&#34;3-使用-hugo-创建博客&#34;&gt;3. 使用 HUGO 创建博客&lt;/h2&gt;
 &lt;p&gt;官网指导文档： &lt;a class=&#34;link&#34; href=&#34;https://gohugo.io/getting-started/quick-start/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;https://gohugo.io/getting-started/quick-start/&lt;/a&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
@@ -130,14 +130,14 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 本地预览效果
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;hugo server
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 添加文章， 注意必须在 posts 文件夹下
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;hugo new content posts/myfirstpost.md  # 生成到 content/posts 文件夹下
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 添加文章， 注意必须在 posts 文件夹下【主题约定博客目录】
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;hugo new posts/myfirstpost.md  # 生成到 content/posts 文件夹下
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 编译生成静态网站  生成 public 文件夹
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;hugo
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;h1 id=&#34;4-部署托管到-github&#34;&gt;4. 部署（托管）到 GitHub&lt;/h1&gt;
+&lt;/div&gt;&lt;h2 id=&#34;4-部署托管到-github&#34;&gt;4. 部署（托管）到 GitHub&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;创建公开仓库，仓库名：&lt;code&gt;用户名.github.io&lt;/code&gt;   [必须]&lt;/li&gt;
 &lt;li&gt;创建 Git 子模块， 将 &lt;code&gt;public&lt;/code&gt; 文件夹下内容 push 到 GitHub 仓库&lt;/li&gt;
@@ -163,7 +163,7 @@
 &lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
 &lt;li&gt;浏览器访问：https://graduatehan.github.io/&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h1 id=&#34;5-另建一个私有-github-仓库my_blog&#34;&gt;5. 另建一个私有 GitHub 仓库：my_blog&lt;/h1&gt;
+&lt;h2 id=&#34;5-另建私有-github-仓库my_blog&#34;&gt;5. 另建私有 GitHub 仓库：my_blog&lt;/h2&gt;
 &lt;p&gt;将所有内容交给 Git 管理，并 push 到 GitHub 仓库&lt;/p&gt;
 &lt;p&gt;编辑&lt;code&gt;.gitignore&lt;/code&gt; 文件：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
@@ -206,8 +206,8 @@
         <pubDate>Sat, 25 Nov 2023 08:59:58 +0800</pubDate>
         <author>xxx@gmail.com (白熊)</author>
         <guid>https://graduatehan.github.io/p/linux-shell-%E5%91%BD%E4%BB%A4-awksed/</guid>
-        <description>&lt;h1 id=&#34;1-引言&#34;&gt;1. 引言&lt;/h1&gt;
-&lt;h2 id=&#34;11-工作中遇到场景&#34;&gt;1.1 工作中遇到场景&lt;/h2&gt;
+        <description>&lt;h2 id=&#34;1-引言&#34;&gt;1. 引言&lt;/h2&gt;
+&lt;h3 id=&#34;11-工作中遇到场景&#34;&gt;1.1 工作中遇到场景&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;将运营同学给的名单转成Json列表格式&lt;/li&gt;
 &lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062127359.png&#34;
@@ -230,9 +230,9 @@
 	
 &gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;12-解决方式多行编辑&#34;&gt;1.2 解决方式：多行编辑&lt;/h2&gt;
+&lt;h3 id=&#34;12-解决方式多行编辑&#34;&gt;1.2 解决方式：多行编辑&lt;/h3&gt;
 &lt;p&gt;以转Json列表格式为例&lt;/p&gt;
-&lt;h3 id=&#34;121-全文编辑器&#34;&gt;1.2.1 全文编辑器&lt;/h3&gt;
+&lt;h4 id=&#34;121-全文编辑器&#34;&gt;1.2.1 全文编辑器&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;sublime text  ：多行编辑快捷键&lt;/p&gt;
@@ -260,12 +260,12 @@
 &lt;p&gt;其他文本编辑器。。。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;122-行编辑器&#34;&gt;1.2.2 行编辑器&lt;/h3&gt;
+&lt;h4 id=&#34;122-行编辑器&#34;&gt;1.2.2 行编辑器&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;awk  ： 非交互式命令，&lt;code&gt;awk &#39;{print &amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;}&#39; companyName.txt&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;sed  ： 非交互式命令，&lt;code&gt;sed &#39;s/^/&amp;quot;/;s/$/&amp;quot;,/&#39;  companyName.txt&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;123-比较&#34;&gt;1.2.3 比较&lt;/h3&gt;
+&lt;h4 id=&#34;123-比较&#34;&gt;1.2.3 比较&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;数据量达到1w行，sublime 已经开始卡顿；数据量到10w行 ，sublime直接卡死&lt;/p&gt;
@@ -290,8 +290,8 @@
 &lt;p&gt;数据量到100w行，vim虽然比awk、sed慢，但还是能处理！牛！（这里不展开讲vim）&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;13-需求再次变化&#34;&gt;1.3 需求再次变化&lt;/h2&gt;
-&lt;h3 id=&#34;131-把json列表格式转换成1行&#34;&gt;1.3.1 把Json列表格式转换成1行&lt;/h3&gt;
+&lt;h3 id=&#34;13-需求再次变化&#34;&gt;1.3 需求再次变化&lt;/h3&gt;
+&lt;h4 id=&#34;131-把json列表格式转换成1行&#34;&gt;1.3.1 把Json列表格式转换成1行&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;可以在上面命令基础上， 使用tr命令&lt;/li&gt;
 &lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062130026.png&#34;
@@ -316,7 +316,7 @@
 	
 &gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;132-最后这个逗号也不想要咋办&#34;&gt;1.3.2 最后这个逗号也不想要，咋办&lt;/h3&gt;
+&lt;h4 id=&#34;132-最后这个逗号也不想要咋办&#34;&gt;1.3.2 最后这个逗号也不想要，咋办&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;可以用sed命令把最后一个字符删掉&lt;/li&gt;
 &lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062131170.png&#34;
@@ -330,7 +330,7 @@
 	
 &gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;133-能不能只用sed-or--awk命令&#34;&gt;1.3.3 能不能只用sed or  awk命令&lt;/h3&gt;
+&lt;h4 id=&#34;133-能不能只用sed-or--awk命令&#34;&gt;1.3.3 能不能只用sed or  awk命令&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;答案： 能！&lt;/li&gt;
 &lt;/ul&gt;
@@ -355,8 +355,8 @@
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;上面的命令能不能看懂？不能？ 本文目标就是让大家能看懂上面命令！&lt;/strong&gt;&lt;/p&gt;
-&lt;h1 id=&#34;2-行编辑器介绍&#34;&gt;2. 行编辑器介绍&lt;/h1&gt;
-&lt;h2 id=&#34;21-sed用法介绍&#34;&gt;2.1 sed用法介绍&lt;/h2&gt;
+&lt;h2 id=&#34;2-行编辑器介绍&#34;&gt;2. 行编辑器介绍&lt;/h2&gt;
+&lt;h3 id=&#34;21-sed用法介绍&#34;&gt;2.1 sed用法介绍&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;简介
@@ -468,7 +468,7 @@ sed 可依照脚本的指令来处理、编辑文本文件。sed 主要用来自
 &lt;p&gt;sed语法详见sed用户手册&lt;code&gt;man sed&lt;/code&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;22-引言中sed命令解析&#34;&gt;2.2 引言中sed命令解析&lt;/h2&gt;
+&lt;h3 id=&#34;22-引言中sed命令解析&#34;&gt;2.2 引言中sed命令解析&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;seq 10 | sed -n &#39;s/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;s/\n/,/g;p}&#39;&lt;/code&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;开头和结尾加上引号
@@ -480,7 +480,7 @@ sed 可依照脚本的指令来处理、编辑文本文件。sed 主要用来自
 &lt;li&gt;把换行替换成空格， 搞定！
 &lt;code&gt;seq 10 | sed -n &#39;s/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;s/\n/,/g;p}&#39;&lt;/code&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2 id=&#34;23-awk-用法介绍&#34;&gt;2.3 awk 用法介绍&lt;/h2&gt;
+&lt;h3 id=&#34;23-awk-用法介绍&#34;&gt;2.3 awk 用法介绍&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;简介
@@ -610,7 +610,7 @@ AWK 是一种处理文本文件的语言，是一个强大的文本分析工具�
 &lt;p&gt;awk程序语法详见 awk用户手册&lt;code&gt;man awk&lt;/code&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;24-引言中awk命令解析&#34;&gt;2.4 引言中awk命令解析&lt;/h2&gt;
+&lt;h3 id=&#34;24-引言中awk命令解析&#34;&gt;2.4 引言中awk命令解析&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;seq 10 | awk &#39;{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{sub(&amp;quot;.$&amp;quot;, &amp;quot;&amp;quot;, s);print s}&#39;&lt;/code&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;使用全局变量s（默认初始化为空字符串）, 拼接字符串
@@ -619,10 +619,10 @@ AWK 是一种处理文本文件的语言，是一个强大的文本分析工具�
 &lt;code&gt;seq 10 | awk &#39;{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{sub(&amp;quot;.$&amp;quot;, &amp;quot;&amp;quot;, s);print s}&#39;&lt;/code&gt;
 注：全局拼接这种方式效率较低，不建议使用。练习使用awk是可以的。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h1 id=&#34;3-实践应用&#34;&gt;3. 实践应用&lt;/h1&gt;
-&lt;h2 id=&#34;31-背景&#34;&gt;3.1 背景&lt;/h2&gt;
+&lt;h2 id=&#34;3-实践应用&#34;&gt;3. 实践应用&lt;/h2&gt;
+&lt;h3 id=&#34;31-背景&#34;&gt;3.1 背景&lt;/h3&gt;
 &lt;p&gt;由于某次线上故障，部分统计数据缺失，需要从日志中解析出缺失的数据&lt;/p&gt;
-&lt;h2 id=&#34;32-目标&#34;&gt;3.2 目标&lt;/h2&gt;
+&lt;h3 id=&#34;32-目标&#34;&gt;3.2 目标&lt;/h3&gt;
 &lt;p&gt;从日志中解析出：date, time, reviewChannelId, taskType, reviewer, elements数组长度&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;日志示例&lt;/li&gt;
@@ -639,12 +639,12 @@ AWK 是一种处理文本文件的语言，是一个强大的文本分析工具�
 &lt;li&gt;解析结果示例
 2023-02-11,21:13:49,1006,130000,tom,1&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;33-分析&#34;&gt;3.3 分析&lt;/h2&gt;
+&lt;h3 id=&#34;33-分析&#34;&gt;3.3 分析&lt;/h3&gt;
 &lt;p&gt;其他的字段都可以通过截取日志一部分得到， elements的长度没有打印，怎么得？&lt;/p&gt;
 &lt;p&gt;答：&lt;code&gt;elements数组长度&lt;/code&gt;
 =&lt;code&gt;&amp;quot;CreativeElementVo&amp;quot;关键词出现次数&lt;/code&gt;
 =&lt;code&gt;以&amp;quot;CreativeElementVo&amp;quot; 为分隔符所得字段数-1&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;34-实践&#34;&gt;3.4 实践&lt;/h2&gt;
+&lt;h3 id=&#34;34-实践&#34;&gt;3.4 实践&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;脚本执行效果如下&lt;/li&gt;
 &lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062144349.png&#34;

@@ -14,8 +14,8 @@
         <pubDate>Sat, 25 Nov 2023 08:59:58 +0800</pubDate>
         <author>xxx@gmail.com (白熊)</author>
         <guid>https://graduatehan.github.io/p/linux-shell-%E5%91%BD%E4%BB%A4-awksed/</guid>
-        <description>&lt;h1 id=&#34;1-引言&#34;&gt;1. 引言&lt;/h1&gt;
-&lt;h2 id=&#34;11-工作中遇到场景&#34;&gt;1.1 工作中遇到场景&lt;/h2&gt;
+        <description>&lt;h2 id=&#34;1-引言&#34;&gt;1. 引言&lt;/h2&gt;
+&lt;h3 id=&#34;11-工作中遇到场景&#34;&gt;1.1 工作中遇到场景&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;将运营同学给的名单转成Json列表格式&lt;/li&gt;
 &lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062127359.png&#34;
@@ -38,9 +38,9 @@
 	
 &gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;12-解决方式多行编辑&#34;&gt;1.2 解决方式：多行编辑&lt;/h2&gt;
+&lt;h3 id=&#34;12-解决方式多行编辑&#34;&gt;1.2 解决方式：多行编辑&lt;/h3&gt;
 &lt;p&gt;以转Json列表格式为例&lt;/p&gt;
-&lt;h3 id=&#34;121-全文编辑器&#34;&gt;1.2.1 全文编辑器&lt;/h3&gt;
+&lt;h4 id=&#34;121-全文编辑器&#34;&gt;1.2.1 全文编辑器&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;sublime text  ：多行编辑快捷键&lt;/p&gt;
@@ -68,12 +68,12 @@
 &lt;p&gt;其他文本编辑器。。。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;122-行编辑器&#34;&gt;1.2.2 行编辑器&lt;/h3&gt;
+&lt;h4 id=&#34;122-行编辑器&#34;&gt;1.2.2 行编辑器&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;awk  ： 非交互式命令，&lt;code&gt;awk &#39;{print &amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;}&#39; companyName.txt&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;sed  ： 非交互式命令，&lt;code&gt;sed &#39;s/^/&amp;quot;/;s/$/&amp;quot;,/&#39;  companyName.txt&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;123-比较&#34;&gt;1.2.3 比较&lt;/h3&gt;
+&lt;h4 id=&#34;123-比较&#34;&gt;1.2.3 比较&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;数据量达到1w行，sublime 已经开始卡顿；数据量到10w行 ，sublime直接卡死&lt;/p&gt;
@@ -98,8 +98,8 @@
 &lt;p&gt;数据量到100w行，vim虽然比awk、sed慢，但还是能处理！牛！（这里不展开讲vim）&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;13-需求再次变化&#34;&gt;1.3 需求再次变化&lt;/h2&gt;
-&lt;h3 id=&#34;131-把json列表格式转换成1行&#34;&gt;1.3.1 把Json列表格式转换成1行&lt;/h3&gt;
+&lt;h3 id=&#34;13-需求再次变化&#34;&gt;1.3 需求再次变化&lt;/h3&gt;
+&lt;h4 id=&#34;131-把json列表格式转换成1行&#34;&gt;1.3.1 把Json列表格式转换成1行&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;可以在上面命令基础上， 使用tr命令&lt;/li&gt;
 &lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062130026.png&#34;
@@ -124,7 +124,7 @@
 	
 &gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;132-最后这个逗号也不想要咋办&#34;&gt;1.3.2 最后这个逗号也不想要，咋办&lt;/h3&gt;
+&lt;h4 id=&#34;132-最后这个逗号也不想要咋办&#34;&gt;1.3.2 最后这个逗号也不想要，咋办&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;可以用sed命令把最后一个字符删掉&lt;/li&gt;
 &lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062131170.png&#34;
@@ -138,7 +138,7 @@
 	
 &gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3 id=&#34;133-能不能只用sed-or--awk命令&#34;&gt;1.3.3 能不能只用sed or  awk命令&lt;/h3&gt;
+&lt;h4 id=&#34;133-能不能只用sed-or--awk命令&#34;&gt;1.3.3 能不能只用sed or  awk命令&lt;/h4&gt;
 &lt;ul&gt;
 &lt;li&gt;答案： 能！&lt;/li&gt;
 &lt;/ul&gt;
@@ -163,8 +163,8 @@
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;上面的命令能不能看懂？不能？ 本文目标就是让大家能看懂上面命令！&lt;/strong&gt;&lt;/p&gt;
-&lt;h1 id=&#34;2-行编辑器介绍&#34;&gt;2. 行编辑器介绍&lt;/h1&gt;
-&lt;h2 id=&#34;21-sed用法介绍&#34;&gt;2.1 sed用法介绍&lt;/h2&gt;
+&lt;h2 id=&#34;2-行编辑器介绍&#34;&gt;2. 行编辑器介绍&lt;/h2&gt;
+&lt;h3 id=&#34;21-sed用法介绍&#34;&gt;2.1 sed用法介绍&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;简介
@@ -276,7 +276,7 @@ sed 可依照脚本的指令来处理、编辑文本文件。sed 主要用来自
 &lt;p&gt;sed语法详见sed用户手册&lt;code&gt;man sed&lt;/code&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;22-引言中sed命令解析&#34;&gt;2.2 引言中sed命令解析&lt;/h2&gt;
+&lt;h3 id=&#34;22-引言中sed命令解析&#34;&gt;2.2 引言中sed命令解析&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;seq 10 | sed -n &#39;s/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;s/\n/,/g;p}&#39;&lt;/code&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;开头和结尾加上引号
@@ -288,7 +288,7 @@ sed 可依照脚本的指令来处理、编辑文本文件。sed 主要用来自
 &lt;li&gt;把换行替换成空格， 搞定！
 &lt;code&gt;seq 10 | sed -n &#39;s/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;s/\n/,/g;p}&#39;&lt;/code&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2 id=&#34;23-awk-用法介绍&#34;&gt;2.3 awk 用法介绍&lt;/h2&gt;
+&lt;h3 id=&#34;23-awk-用法介绍&#34;&gt;2.3 awk 用法介绍&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;简介
@@ -418,7 +418,7 @@ AWK 是一种处理文本文件的语言，是一个强大的文本分析工具�
 &lt;p&gt;awk程序语法详见 awk用户手册&lt;code&gt;man awk&lt;/code&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;24-引言中awk命令解析&#34;&gt;2.4 引言中awk命令解析&lt;/h2&gt;
+&lt;h3 id=&#34;24-引言中awk命令解析&#34;&gt;2.4 引言中awk命令解析&lt;/h3&gt;
 &lt;p&gt;&lt;code&gt;seq 10 | awk &#39;{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{sub(&amp;quot;.$&amp;quot;, &amp;quot;&amp;quot;, s);print s}&#39;&lt;/code&gt;&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;使用全局变量s（默认初始化为空字符串）, 拼接字符串
@@ -427,10 +427,10 @@ AWK 是一种处理文本文件的语言，是一个强大的文本分析工具�
 &lt;code&gt;seq 10 | awk &#39;{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{sub(&amp;quot;.$&amp;quot;, &amp;quot;&amp;quot;, s);print s}&#39;&lt;/code&gt;
 注：全局拼接这种方式效率较低，不建议使用。练习使用awk是可以的。&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h1 id=&#34;3-实践应用&#34;&gt;3. 实践应用&lt;/h1&gt;
-&lt;h2 id=&#34;31-背景&#34;&gt;3.1 背景&lt;/h2&gt;
+&lt;h2 id=&#34;3-实践应用&#34;&gt;3. 实践应用&lt;/h2&gt;
+&lt;h3 id=&#34;31-背景&#34;&gt;3.1 背景&lt;/h3&gt;
 &lt;p&gt;由于某次线上故障，部分统计数据缺失，需要从日志中解析出缺失的数据&lt;/p&gt;
-&lt;h2 id=&#34;32-目标&#34;&gt;3.2 目标&lt;/h2&gt;
+&lt;h3 id=&#34;32-目标&#34;&gt;3.2 目标&lt;/h3&gt;
 &lt;p&gt;从日志中解析出：date, time, reviewChannelId, taskType, reviewer, elements数组长度&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;日志示例&lt;/li&gt;
@@ -447,12 +447,12 @@ AWK 是一种处理文本文件的语言，是一个强大的文本分析工具�
 &lt;li&gt;解析结果示例
 2023-02-11,21:13:49,1006,130000,tom,1&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h2 id=&#34;33-分析&#34;&gt;3.3 分析&lt;/h2&gt;
+&lt;h3 id=&#34;33-分析&#34;&gt;3.3 分析&lt;/h3&gt;
 &lt;p&gt;其他的字段都可以通过截取日志一部分得到， elements的长度没有打印，怎么得？&lt;/p&gt;
 &lt;p&gt;答：&lt;code&gt;elements数组长度&lt;/code&gt;
 =&lt;code&gt;&amp;quot;CreativeElementVo&amp;quot;关键词出现次数&lt;/code&gt;
 =&lt;code&gt;以&amp;quot;CreativeElementVo&amp;quot; 为分隔符所得字段数-1&lt;/code&gt;&lt;/p&gt;
-&lt;h2 id=&#34;34-实践&#34;&gt;3.4 实践&lt;/h2&gt;
+&lt;h3 id=&#34;34-实践&#34;&gt;3.4 实践&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;脚本执行效果如下&lt;/li&gt;
 &lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062144349.png&#34;
