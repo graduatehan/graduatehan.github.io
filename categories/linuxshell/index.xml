@@ -1,514 +1,423 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>LinuxShell on 白熊&#39;s Blog</title>
-        <link>https://graduatehan.github.io/categories/linuxshell/</link>
-        <description>Recent content in LinuxShell on 白熊&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-CN</language>
-        <managingEditor>xxx@gmail.com (白熊)</managingEditor>
-        <webMaster>xxx@gmail.com (白熊)</webMaster>
-        <lastBuildDate>Sat, 25 Nov 2023 08:59:58 +0800</lastBuildDate><atom:link href="https://graduatehan.github.io/categories/linuxshell/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>Linux Shell 命令—— awk、sed</title>
-        <link>https://graduatehan.github.io/p/linux-shell-%E5%91%BD%E4%BB%A4-awksed/</link>
-        <pubDate>Sat, 25 Nov 2023 08:59:58 +0800</pubDate>
-        <author>xxx@gmail.com (白熊)</author>
-        <guid>https://graduatehan.github.io/p/linux-shell-%E5%91%BD%E4%BB%A4-awksed/</guid>
-        <description>&lt;h2 id=&#34;1-引言&#34;&gt;1. 引言&lt;/h2&gt;
-&lt;h3 id=&#34;11-工作中遇到场景&#34;&gt;1.1 工作中遇到场景&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;将运营同学给的名单转成Json列表格式&lt;/li&gt;
-&lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062127359.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-	
-&gt;&lt;/li&gt;
-&lt;li&gt;遇到特殊情况需要做MDL&lt;/li&gt;
-&lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062129256.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image (1)&#34;
-	
-	
-&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;12-解决方式多行编辑&#34;&gt;1.2 解决方式：多行编辑&lt;/h3&gt;
-&lt;p&gt;以转Json列表格式为例&lt;/p&gt;
-&lt;h4 id=&#34;121-全文编辑器&#34;&gt;1.2.1 全文编辑器&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;sublime text  ：多行编辑快捷键&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;快捷键： &lt;code&gt;cmd+A -&amp;gt; shift+cmd+L -&amp;gt; &amp;quot; -&amp;gt; cmd+右箭头 -&amp;gt; ,&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;解释：    &lt;code&gt;选中全部 -&amp;gt; 光标定位到选中行(选中状态) -&amp;gt; 选中文本加引号 -&amp;gt; 光标定位到行尾 -&amp;gt;  插入逗号&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;vim  ： 宏录制重放&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;录制 : &lt;code&gt;qa -&amp;gt; I -&amp;gt; &amp;quot; -&amp;gt; esc -&amp;gt; A -&amp;gt; &amp;quot;,-&amp;gt; esc -&amp;gt;q&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;解释：&lt;code&gt;开启录制 -&amp;gt; 行首插入 -&amp;gt; 引号 -&amp;gt; 返回normal模式 -&amp;gt; 行尾插入 -&amp;gt; 引号逗号 -&amp;gt; 返回normal模式 -&amp;gt; 结束录制&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;回放：&lt;code&gt;V -&amp;gt; G -&amp;gt; : -&amp;gt; normal @a&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;解释：&lt;code&gt;选中光标行进入可视行模式 -&amp;gt; 选中至文尾 -&amp;gt; 单行命令模式 -&amp;gt; 重放宏&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;其他文本编辑器。。。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;122-行编辑器&#34;&gt;1.2.2 行编辑器&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;awk  ： 非交互式命令，&lt;code&gt;awk &#39;{print &amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;}&#39; companyName.txt&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;sed  ： 非交互式命令，&lt;code&gt;sed &#39;s/^/&amp;quot;/;s/$/&amp;quot;,/&#39;  companyName.txt&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;123-比较&#34;&gt;1.2.3 比较&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;数据量达到1w行，sublime 已经开始卡顿；数据量到10w行 ，sublime直接卡死&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;数据量到100w行，awk，sed毫无压力，耗时分别为0.5s 和 0.18s&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062128305.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image (2)&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;说明：seq命令生成数字序列，模拟需要处理的数据&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;数据量到100w行，vim虽然比awk、sed慢，但还是能处理！牛！（这里不展开讲vim）&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;13-需求再次变化&#34;&gt;1.3 需求再次变化&lt;/h3&gt;
-&lt;h4 id=&#34;131-把json列表格式转换成1行&#34;&gt;1.3.1 把Json列表格式转换成1行&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;可以在上面命令基础上， 使用tr命令&lt;/li&gt;
-&lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062130026.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image (3)&#34;
-	
-	
-&gt;&lt;/li&gt;
-&lt;li&gt;可以用awk命令指定输出记录分隔符&lt;/li&gt;
-&lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062130932.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image (4)&#34;
-	
-	
-&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;132-最后这个逗号也不想要咋办&#34;&gt;1.3.2 最后这个逗号也不想要，咋办&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;可以用sed命令把最后一个字符删掉&lt;/li&gt;
-&lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062131170.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image (5)&#34;
-	
-	
-&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&#34;133-能不能只用sed-or--awk命令&#34;&gt;1.3.3 能不能只用sed or  awk命令&lt;/h4&gt;
-&lt;ul&gt;
-&lt;li&gt;答案： 能！&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;seq 10 | awk &amp;#39;{s=s&amp;#34;\&amp;#34;&amp;#34;$0&amp;#34;\&amp;#34;,&amp;#34;} END{sub(&amp;#34;.$&amp;#34;, &amp;#34;&amp;#34;, s);print s}&amp;#39;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;seq 10 | sed -n &amp;#39;s/^/&amp;#34;/;s/$/&amp;#34;/;1h;1!H;${x;s/\n/,/g;p}&amp;#39;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062131975.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image (6)&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;上面的命令能不能看懂？不能？ 本文目标就是让大家能看懂上面命令！&lt;/strong&gt;&lt;/p&gt;
-&lt;h2 id=&#34;2-行编辑器介绍&#34;&gt;2. 行编辑器介绍&lt;/h2&gt;
-&lt;h3 id=&#34;21-sed用法介绍&#34;&gt;2.1 sed用法介绍&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;简介
-sed 可依照脚本的指令来处理、编辑文本文件。sed 主要用来自动编辑一个或多个文件、简化对文件的反复操作、编写转换程序等。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;sed的工作方式&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;从文件或者标准输入(input stream)中读取一行到模式空间（pattern space）中&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;一系列指令处理输入行(指令中可能用到保持空间hold space)&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;把处理结果输出到标准输出&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;重复执行step1~step3，直到输入处理完毕&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;pre&gt;&lt;code&gt;![image (7)](https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062131685.png)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;语法：&lt;code&gt;sed  [-nri] [-e&amp;lt;script&amp;gt;] [-f&amp;lt;script文件&amp;gt;] [文本文件]&lt;/code&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;-n 静默模式（处理完毕不输出），一般和p连用&lt;/li&gt;
-&lt;li&gt;-r 支持扩展正则表达式（扩展元字符eg：+?| ）&lt;/li&gt;
-&lt;li&gt;-i 修改会保存到原文件&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;script 指令格式 ：&lt;code&gt; [寻址] 指令&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;[寻址]&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;可为空表示不寻址，每行都处理&lt;/li&gt;
-&lt;li&gt;支持行号  和 正则 可以混用&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;number&lt;/code&gt; 行号&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;first~step&lt;/code&gt; 从第first行开始处理，每step行处理一次
-&lt;ul&gt;
-&lt;li&gt;例如： 1~2 处理奇数行&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;/regexp/&lt;/code&gt; 正则匹配&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;/regexp/,/regexp/&lt;/code&gt; 正则匹配一个范围&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;0,addr2&lt;/code&gt; 行号匹配一个范围&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;addr1,+N&lt;/code&gt; 匹配&lt;code&gt;addr1&lt;/code&gt;行及其后面的&lt;code&gt;N&lt;/code&gt;行&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;[寻址]!&lt;/code&gt; 表示对寻址取反&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;指令&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;sed  &#39;[寻址]s/key/newkey/[标志位]&#39;&lt;/code&gt;  替换指令
-&lt;ul&gt;
-&lt;li&gt;寻址为空表示全部匹配&lt;/li&gt;
-&lt;li&gt;对匹配行执行替换指令&lt;/li&gt;
-&lt;li&gt;标志位
-&lt;ul&gt;
-&lt;li&gt;空：表示替换第一次出现&lt;/li&gt;
-&lt;li&gt;数字： 替换第几次出现&lt;/li&gt;
-&lt;li&gt;p： 打印，配合 -n 使用&lt;/li&gt;
-&lt;li&gt;w file ： 将模式空间内容写到文件file中&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sed &#39;[寻址]p&#39;&lt;/code&gt; 打印匹配行
-&lt;ul&gt;
-&lt;li&gt;实际应用举例
-&lt;ul&gt;
-&lt;li&gt;截取一段时间内日志：&lt;code&gt;sed -n &#39;/2023-03-29 21:00:00 +0800/,/2023-03-29 21:10:00  +0800/p&#39; application.log &amp;gt; demo.log&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;截取指定行数日志 ：&lt;code&gt;sed -n &#39;10000,20000p&#39; application.log &amp;gt; demo.log&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sed  &#39;[寻址]d&#39;&lt;/code&gt;  删除匹配行&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sed  &#39;[寻址]a message&#39;&lt;/code&gt;  行后追加&lt;code&gt;message&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sed  &#39;[寻址]i message&#39;&lt;/code&gt;  行前追加&lt;code&gt;message&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sed  &#39;[寻址]c message&#39;&lt;/code&gt;  用&lt;code&gt;message&lt;/code&gt;取代整行&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sed  &#39;[寻址]q&#39;&lt;/code&gt;  退出sed&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sed  &#39;[寻址]=&#39;&lt;/code&gt;  输出行号&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sed  &#39;[寻址]w file&#39;&lt;/code&gt;  写入文件&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;sed  &#39;[寻址]r file&#39;&lt;/code&gt;  读出文件&lt;/li&gt;
-&lt;li&gt;。。。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;多行模式相关指令&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;N&lt;/code&gt; 将下一行加入模式空间&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;D&lt;/code&gt; 删除模式空间中第一个字符到第一个换行符&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;P&lt;/code&gt; 打印模式空间中第一个字符到第一个换行符&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;保持空间（hold space）相关指令&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;h&lt;/code&gt;和&lt;code&gt;H&lt;/code&gt;将模式空间内容存放到保持空间  &lt;code&gt;h&lt;/code&gt;：覆盖模式  &lt;code&gt;H&lt;/code&gt;：追加模式&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;g&lt;/code&gt;和&lt;code&gt;G&lt;/code&gt;将保持空间内容取出到模式空间  &lt;code&gt;g&lt;/code&gt;：覆盖模式 &lt;code&gt;G&lt;/code&gt;：追加模式&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;x&lt;/code&gt; 交换保持空间和模式空间的内容&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;sed语法详见sed用户手册&lt;code&gt;man sed&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;22-引言中sed命令解析&#34;&gt;2.2 引言中sed命令解析&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;seq 10 | sed -n &#39;s/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;s/\n/,/g;p}&#39;&lt;/code&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;开头和结尾加上引号
-&lt;code&gt;seq 10 | sed -n &#39;s/^/&amp;quot;/;s/$/&amp;quot;/;p&#39;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;每处理一行不输出，追加到保持空间（hold space）， 处理到最后1行时，打印输出
-&lt;code&gt;seq 10 | sed -n &#39;s/^/&amp;quot;/;s/$/&amp;quot;/;H;${x;p}&#39;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;解决输出空行问题： 第一次加入保持空间时，使用覆盖方式，后边使用追加方式
-&lt;code&gt;seq 10 | sed -n &#39;s/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;p}&#39;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;把换行替换成空格， 搞定！
-&lt;code&gt;seq 10 | sed -n &#39;s/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;s/\n/,/g;p}&#39;&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;23-awk-用法介绍&#34;&gt;2.3 awk 用法介绍&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;简介
-AWK 是一种处理文本文件的语言，是一个强大的文本分析工具。之所以叫 AWK 是因为其取了三位创始人 Alfred Aho，Peter Weinberger, 和 Brian Kernighan 的 Family Name 的首字符。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;名次解释&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;记录： 一行称为一条记录， 用&lt;code&gt;$0&lt;/code&gt;表示&lt;/li&gt;
-&lt;li&gt;分隔符： 默认是空格和制表符，可指定&lt;/li&gt;
-&lt;li&gt;字段： 一条记录用分隔符分割开来的部分称为字段， 用&lt;code&gt;$1,$2...$n&lt;/code&gt;表示&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;语法： &lt;code&gt;awk [-Fvf] &#39;BEGIN{} [pattern]  {} END{}&#39; fileName&lt;/code&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;注意
-&lt;ul&gt;
-&lt;li&gt;必须使用单引号包裹&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;BEGIN`` END&lt;/code&gt; 必须大写(它们是预定义好的、特殊的&lt;code&gt;pattern&lt;/code&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;参数含义
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;-F&lt;/code&gt; 指定分隔符，支持正则，可指定多个分隔符
-&lt;ul&gt;
-&lt;li&gt;例如：   &lt;code&gt;-F  &amp;quot;[ ,]&amp;quot;&lt;/code&gt; 指定空格和逗号作分隔符&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;-v&lt;/code&gt; 指定变量
-&lt;ul&gt;
-&lt;li&gt;例如： &lt;code&gt;-v FS=&amp;quot;[ ,]&amp;quot;&lt;/code&gt; 指定空格和逗号作分隔符&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;-f&lt;/code&gt;指定脚本文件&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;BEGIN{}&lt;/code&gt; 执行前的语句块
-&lt;ul&gt;
-&lt;li&gt;可以预定义变量，&lt;code&gt;BEGIN{FS=&amp;quot;[ ,]&amp;quot;}&lt;/code&gt; 指定空格和逗号作分隔符&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;[pattern]{}&lt;/code&gt; 执行中的语句块
-&lt;ul&gt;
-&lt;li&gt;对 &lt;code&gt;[pattern]&lt;/code&gt;匹配的行，执行&lt;code&gt;{}&lt;/code&gt;中的语句&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;[pattern]&lt;/code&gt; 匹配筛选条件
-&lt;ul&gt;
-&lt;li&gt;使用 关系、逻辑、匹配或不匹配 运算符&lt;/li&gt;
-&lt;li&gt;为空代表不筛选&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;END{}&lt;/code&gt; 执行后的语句块&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;awk是一种文本处理&lt;strong&gt;语言&lt;/strong&gt;， 支持 变量，运算符、表达式、流程控制、函数 等&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;运算符&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;赋值运算符： = += -= *= /= %= ^= **=&lt;/li&gt;
-&lt;li&gt;关系运算符： &amp;lt; &amp;lt;= &amp;gt; &amp;gt;= != ==&lt;/li&gt;
-&lt;li&gt;逻辑运算符： &amp;amp;&amp;amp; || !&lt;/li&gt;
-&lt;li&gt;匹配运算符： ~   !~&lt;/li&gt;
-&lt;li&gt;空格  ： 字符串连接&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;流程控制&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062137005.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image-20230406213754983&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;常用系统变量&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;FS&lt;/code&gt;  字段分隔符，默认空格&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;OFS&lt;/code&gt;  输出字段分隔符，默认空格&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;RS&lt;/code&gt; 记录分隔符，默认\n&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ORS&lt;/code&gt; 输出记录分隔符， 默认是\n&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;NF&lt;/code&gt; 一行的字段数&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;NR&lt;/code&gt; 当前的所在的行数&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;内置函数示例&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062139439.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image-20230406213903410&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;自定义函数示例&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062139312.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image-20230406213948277&#34;
-	
-	
-&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;awk程序语法详见 awk用户手册&lt;code&gt;man awk&lt;/code&gt;&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;24-引言中awk命令解析&#34;&gt;2.4 引言中awk命令解析&lt;/h3&gt;
-&lt;p&gt;&lt;code&gt;seq 10 | awk &#39;{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{sub(&amp;quot;.$&amp;quot;, &amp;quot;&amp;quot;, s);print s}&#39;&lt;/code&gt;&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;使用全局变量s（默认初始化为空字符串）, 拼接字符串
-&lt;code&gt;seq 10 | awk &#39;{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{print s}&#39;&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;把最后一个字符替替换成空， &lt;code&gt;sub&lt;/code&gt;是awk内置函数
-&lt;code&gt;seq 10 | awk &#39;{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{sub(&amp;quot;.$&amp;quot;, &amp;quot;&amp;quot;, s);print s}&#39;&lt;/code&gt;
-注：全局拼接这种方式效率较低，不建议使用。练习使用awk是可以的。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h2 id=&#34;3-实践应用&#34;&gt;3. 实践应用&lt;/h2&gt;
-&lt;h3 id=&#34;31-背景&#34;&gt;3.1 背景&lt;/h3&gt;
-&lt;p&gt;由于某次线上故障，部分统计数据缺失，需要从日志中解析出缺失的数据&lt;/p&gt;
-&lt;h3 id=&#34;32-目标&#34;&gt;3.2 目标&lt;/h3&gt;
-&lt;p&gt;从日志中解析出：date, time, reviewChannelId, taskType, reviewer, elements数组长度&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;日志示例&lt;/li&gt;
-&lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062143396.webp&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;d2f023672dac4ec7974277f0ab7ea184&#34;
-	
-	
-&gt;&lt;/li&gt;
-&lt;li&gt;解析结果示例
-2023-02-11,21:13:49,1006,130000,tom,1&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;33-分析&#34;&gt;3.3 分析&lt;/h3&gt;
-&lt;p&gt;其他的字段都可以通过截取日志一部分得到， elements的长度没有打印，怎么得？&lt;/p&gt;
-&lt;p&gt;答：&lt;code&gt;elements数组长度&lt;/code&gt;
-=&lt;code&gt;&amp;quot;CreativeElementVo&amp;quot;关键词出现次数&lt;/code&gt;
-=&lt;code&gt;以&amp;quot;CreativeElementVo&amp;quot; 为分隔符所得字段数-1&lt;/code&gt;&lt;/p&gt;
-&lt;h3 id=&#34;34-实践&#34;&gt;3.4 实践&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;脚本执行效果如下&lt;/li&gt;
-&lt;li&gt;&lt;img src=&#34;https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062144349.png&#34;
-	
-	
-	
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image-20230406214414325&#34;
-	
-	
-&gt;&lt;/li&gt;
-&lt;li&gt;formalLog.sh 脚本代码如下&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;#!/bin/bash
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;cp&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;fileName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$1&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;cat &lt;span class=&#34;nv&#34;&gt;$fileName&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;while&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;read&lt;/span&gt; line &lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;do&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;c1&#34;&gt;# 预处理：截取需要的部分&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;nv&#34;&gt;subLine&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$line&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk -F &lt;span class=&#34;s1&#34;&gt;&amp;#39;@message|reasons=&amp;#39;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;c1&#34;&gt;# 获取：elements数组长度&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;nv&#34;&gt;elementCount&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$subLine&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk -F &lt;span class=&#34;s1&#34;&gt;&amp;#39;CreativeElementVo&amp;#39;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print (NF-1)}&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;c1&#34;&gt;# 获取：reviewChannelId，taskType，reviewer&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;nv&#34;&gt;mess&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$subLine&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;se&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;		-F &lt;span class=&#34;s2&#34;&gt;&amp;#34;reviewChannelId=|, taskType=|, reviewer=|, reviewStatus=&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;		-v &lt;span class=&#34;nv&#34;&gt;OFS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;,&amp;#39;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;		&lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $(NF-3),$(NF-2),$(NF-1)}&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;c1&#34;&gt;# 获取时间&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;nv&#34;&gt;dt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$subLine&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk -F &lt;span class=&#34;s2&#34;&gt;&amp;#34; &amp;#34;&lt;/span&gt; -v &lt;span class=&#34;nv&#34;&gt;OFS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;,&amp;#39;&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $3,$4}&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;c1&#34;&gt;# 输出目标内容&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;$dt&lt;/span&gt;,&lt;span class=&#34;nv&#34;&gt;$mess&lt;/span&gt;,&lt;span class=&#34;nv&#34;&gt;$elementCount&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;done&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;</description>
-        </item>
-        
-    </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>LinuxShell on 白熊's Blog</title><link>https://graduatehan.github.io/categories/linuxshell/</link><description>Recent content in LinuxShell on 白熊's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-CN</language><managingEditor>xxx@gmail.com (白熊)</managingEditor><webMaster>xxx@gmail.com (白熊)</webMaster><lastBuildDate>Sat, 25 Nov 2023 08:59:58 +0800</lastBuildDate><atom:link href="https://graduatehan.github.io/categories/linuxshell/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux Shell 命令—— awk、sed</title><link>https://graduatehan.github.io/p/linux-shell-%E5%91%BD%E4%BB%A4-awksed/</link><pubDate>Sat, 25 Nov 2023 08:59:58 +0800</pubDate><author>xxx@gmail.com (白熊)</author><guid>https://graduatehan.github.io/p/linux-shell-%E5%91%BD%E4%BB%A4-awksed/</guid><description>&lt;h2 id="1-引言">1. 引言&lt;/h2>
+&lt;h3 id="11-工作中遇到场景">1.1 工作中遇到场景&lt;/h3>
+&lt;ul>
+&lt;li>将运营同学给的名单转成Json列表格式&lt;/li>
+&lt;li>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062127359.png"
+loading="lazy"
+>&lt;/li>
+&lt;li>遇到特殊情况需要做MDL&lt;/li>
+&lt;li>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062129256.png"
+loading="lazy"
+alt="image (1)"
+>&lt;/li>
+&lt;/ul>
+&lt;h3 id="12-解决方式多行编辑">1.2 解决方式：多行编辑&lt;/h3>
+&lt;p>以转Json列表格式为例&lt;/p>
+&lt;h4 id="121-全文编辑器">1.2.1 全文编辑器&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>sublime text ：多行编辑快捷键&lt;/p>
+&lt;ul>
+&lt;li>快捷键： &lt;code>cmd+A -&amp;gt; shift+cmd+L -&amp;gt; &amp;quot; -&amp;gt; cmd+右箭头 -&amp;gt; ,&lt;/code>&lt;/li>
+&lt;li>解释： &lt;code>选中全部 -&amp;gt; 光标定位到选中行(选中状态) -&amp;gt; 选中文本加引号 -&amp;gt; 光标定位到行尾 -&amp;gt; 插入逗号&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>vim ： 宏录制重放&lt;/p>
+&lt;ol>
+&lt;li>录制 : &lt;code>qa -&amp;gt; I -&amp;gt; &amp;quot; -&amp;gt; esc -&amp;gt; A -&amp;gt; &amp;quot;,-&amp;gt; esc -&amp;gt;q&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>解释：&lt;code>开启录制 -&amp;gt; 行首插入 -&amp;gt; 引号 -&amp;gt; 返回normal模式 -&amp;gt; 行尾插入 -&amp;gt; 引号逗号 -&amp;gt; 返回normal模式 -&amp;gt; 结束录制&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;ol start="2">
+&lt;li>回放：&lt;code>V -&amp;gt; G -&amp;gt; : -&amp;gt; normal @a&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>解释：&lt;code>选中光标行进入可视行模式 -&amp;gt; 选中至文尾 -&amp;gt; 单行命令模式 -&amp;gt; 重放宏&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>其他文本编辑器。。。&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="122-行编辑器">1.2.2 行编辑器&lt;/h4>
+&lt;ul>
+&lt;li>awk ： 非交互式命令，&lt;code>awk '{print &amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;}' companyName.txt&lt;/code>&lt;/li>
+&lt;li>sed ： 非交互式命令，&lt;code>sed 's/^/&amp;quot;/;s/$/&amp;quot;,/' companyName.txt&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h4 id="123-比较">1.2.3 比较&lt;/h4>
+&lt;ul>
+&lt;li>
+&lt;p>数据量达到1w行，sublime 已经开始卡顿；数据量到10w行 ，sublime直接卡死&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>数据量到100w行，awk，sed毫无压力，耗时分别为0.5s 和 0.18s&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062128305.png"
+loading="lazy"
+alt="image (2)"
+>&lt;/p>
+&lt;p>说明：seq命令生成数字序列，模拟需要处理的数据&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>数据量到100w行，vim虽然比awk、sed慢，但还是能处理！牛！（这里不展开讲vim）&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="13-需求再次变化">1.3 需求再次变化&lt;/h3>
+&lt;h4 id="131-把json列表格式转换成1行">1.3.1 把Json列表格式转换成1行&lt;/h4>
+&lt;ul>
+&lt;li>可以在上面命令基础上， 使用tr命令&lt;/li>
+&lt;li>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062130026.png"
+loading="lazy"
+alt="image (3)"
+>&lt;/li>
+&lt;li>可以用awk命令指定输出记录分隔符&lt;/li>
+&lt;li>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062130932.png"
+loading="lazy"
+alt="image (4)"
+>&lt;/li>
+&lt;/ul>
+&lt;h4 id="132-最后这个逗号也不想要咋办">1.3.2 最后这个逗号也不想要，咋办&lt;/h4>
+&lt;ul>
+&lt;li>可以用sed命令把最后一个字符删掉&lt;/li>
+&lt;li>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062131170.png"
+loading="lazy"
+alt="image (5)"
+>&lt;/li>
+&lt;/ul>
+&lt;h4 id="133-能不能只用sed-or--awk命令">1.3.3 能不能只用sed or awk命令&lt;/h4>
+&lt;ul>
+&lt;li>答案： 能！&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">seq 10 | awk &amp;#39;{s=s&amp;#34;\&amp;#34;&amp;#34;$0&amp;#34;\&amp;#34;,&amp;#34;} END{sub(&amp;#34;.$&amp;#34;, &amp;#34;&amp;#34;, s);print s}&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">seq 10 | sed -n &amp;#39;s/^/&amp;#34;/;s/$/&amp;#34;/;1h;1!H;${x;s/\n/,/g;p}&amp;#39;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062131975.png"
+loading="lazy"
+alt="image (6)"
+>&lt;/p>
+&lt;p>&lt;strong>上面的命令能不能看懂？不能？ 本文目标就是让大家能看懂上面命令！&lt;/strong>&lt;/p>
+&lt;h2 id="2-行编辑器介绍">2. 行编辑器介绍&lt;/h2>
+&lt;h3 id="21-sed用法介绍">2.1 sed用法介绍&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>简介
+sed 可依照脚本的指令来处理、编辑文本文件。sed 主要用来自动编辑一个或多个文件、简化对文件的反复操作、编写转换程序等。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>sed的工作方式&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>从文件或者标准输入(input stream)中读取一行到模式空间（pattern space）中&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>一系列指令处理输入行(指令中可能用到保持空间hold space)&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>把处理结果输出到标准输出&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>重复执行step1~step3，直到输入处理完毕&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;pre>&lt;code>![image (7)](https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062131685.png)
+&lt;/code>&lt;/pre>
+&lt;/li>
+&lt;li>
+&lt;p>语法：&lt;code>sed [-nri] [-e&amp;lt;script&amp;gt;] [-f&amp;lt;script文件&amp;gt;] [文本文件]&lt;/code>&lt;/p>
+&lt;ul>
+&lt;li>-n 静默模式（处理完毕不输出），一般和p连用&lt;/li>
+&lt;li>-r 支持扩展正则表达式（扩展元字符eg：+?| ）&lt;/li>
+&lt;li>-i 修改会保存到原文件&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>script 指令格式 ：&lt;code> [寻址] 指令&lt;/code>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>[寻址]&lt;/p>
+&lt;ul>
+&lt;li>可为空表示不寻址，每行都处理&lt;/li>
+&lt;li>支持行号 和 正则 可以混用&lt;/li>
+&lt;li>&lt;code>number&lt;/code> 行号&lt;/li>
+&lt;li>&lt;code>first~step&lt;/code> 从第first行开始处理，每step行处理一次
+&lt;ul>
+&lt;li>例如： 1~2 处理奇数行&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>/regexp/&lt;/code> 正则匹配&lt;/li>
+&lt;li>&lt;code>/regexp/,/regexp/&lt;/code> 正则匹配一个范围&lt;/li>
+&lt;li>&lt;code>0,addr2&lt;/code> 行号匹配一个范围&lt;/li>
+&lt;li>&lt;code>addr1,+N&lt;/code> 匹配&lt;code>addr1&lt;/code>行及其后面的&lt;code>N&lt;/code>行&lt;/li>
+&lt;li>&lt;code>[寻址]!&lt;/code> 表示对寻址取反&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>指令&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>sed '[寻址]s/key/newkey/[标志位]'&lt;/code> 替换指令
+&lt;ul>
+&lt;li>寻址为空表示全部匹配&lt;/li>
+&lt;li>对匹配行执行替换指令&lt;/li>
+&lt;li>标志位
+&lt;ul>
+&lt;li>空：表示替换第一次出现&lt;/li>
+&lt;li>数字： 替换第几次出现&lt;/li>
+&lt;li>p： 打印，配合 -n 使用&lt;/li>
+&lt;li>w file ： 将模式空间内容写到文件file中&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>sed '[寻址]p'&lt;/code> 打印匹配行
+&lt;ul>
+&lt;li>实际应用举例
+&lt;ul>
+&lt;li>截取一段时间内日志：&lt;code>sed -n '/2023-03-29 21:00:00 +0800/,/2023-03-29 21:10:00 +0800/p' application.log &amp;gt; demo.log&lt;/code>&lt;/li>
+&lt;li>截取指定行数日志 ：&lt;code>sed -n '10000,20000p' application.log &amp;gt; demo.log&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>sed '[寻址]d'&lt;/code> 删除匹配行&lt;/li>
+&lt;li>&lt;code>sed '[寻址]a message'&lt;/code> 行后追加&lt;code>message&lt;/code>&lt;/li>
+&lt;li>&lt;code>sed '[寻址]i message'&lt;/code> 行前追加&lt;code>message&lt;/code>&lt;/li>
+&lt;li>&lt;code>sed '[寻址]c message'&lt;/code> 用&lt;code>message&lt;/code>取代整行&lt;/li>
+&lt;li>&lt;code>sed '[寻址]q'&lt;/code> 退出sed&lt;/li>
+&lt;li>&lt;code>sed '[寻址]='&lt;/code> 输出行号&lt;/li>
+&lt;li>&lt;code>sed '[寻址]w file'&lt;/code> 写入文件&lt;/li>
+&lt;li>&lt;code>sed '[寻址]r file'&lt;/code> 读出文件&lt;/li>
+&lt;li>。。。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>多行模式相关指令&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>N&lt;/code> 将下一行加入模式空间&lt;/li>
+&lt;li>&lt;code>D&lt;/code> 删除模式空间中第一个字符到第一个换行符&lt;/li>
+&lt;li>&lt;code>P&lt;/code> 打印模式空间中第一个字符到第一个换行符&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>保持空间（hold space）相关指令&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>h&lt;/code>和&lt;code>H&lt;/code>将模式空间内容存放到保持空间 &lt;code>h&lt;/code>：覆盖模式 &lt;code>H&lt;/code>：追加模式&lt;/li>
+&lt;li>&lt;code>g&lt;/code>和&lt;code>G&lt;/code>将保持空间内容取出到模式空间 &lt;code>g&lt;/code>：覆盖模式 &lt;code>G&lt;/code>：追加模式&lt;/li>
+&lt;li>&lt;code>x&lt;/code> 交换保持空间和模式空间的内容&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>sed语法详见sed用户手册&lt;code>man sed&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="22-引言中sed命令解析">2.2 引言中sed命令解析&lt;/h3>
+&lt;p>&lt;code>seq 10 | sed -n 's/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;s/\n/,/g;p}'&lt;/code>&lt;/p>
+&lt;ol>
+&lt;li>开头和结尾加上引号
+&lt;code>seq 10 | sed -n 's/^/&amp;quot;/;s/$/&amp;quot;/;p'&lt;/code>&lt;/li>
+&lt;li>每处理一行不输出，追加到保持空间（hold space）， 处理到最后1行时，打印输出
+&lt;code>seq 10 | sed -n 's/^/&amp;quot;/;s/$/&amp;quot;/;H;${x;p}'&lt;/code>&lt;/li>
+&lt;li>解决输出空行问题： 第一次加入保持空间时，使用覆盖方式，后边使用追加方式
+&lt;code>seq 10 | sed -n 's/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;p}'&lt;/code>&lt;/li>
+&lt;li>把换行替换成空格， 搞定！
+&lt;code>seq 10 | sed -n 's/^/&amp;quot;/;s/$/&amp;quot;/;1h;1!H;${x;s/\n/,/g;p}'&lt;/code>&lt;/li>
+&lt;/ol>
+&lt;h3 id="23-awk-用法介绍">2.3 awk 用法介绍&lt;/h3>
+&lt;ul>
+&lt;li>
+&lt;p>简介
+AWK 是一种处理文本文件的语言，是一个强大的文本分析工具。之所以叫 AWK 是因为其取了三位创始人 Alfred Aho，Peter Weinberger, 和 Brian Kernighan 的 Family Name 的首字符。&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>名次解释&lt;/p>
+&lt;ul>
+&lt;li>记录： 一行称为一条记录， 用&lt;code>$0&lt;/code>表示&lt;/li>
+&lt;li>分隔符： 默认是空格和制表符，可指定&lt;/li>
+&lt;li>字段： 一条记录用分隔符分割开来的部分称为字段， 用&lt;code>$1,$2...$n&lt;/code>表示&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>语法： &lt;code>awk [-Fvf] 'BEGIN{} [pattern] {} END{}' fileName&lt;/code>&lt;/p>
+&lt;ul>
+&lt;li>注意
+&lt;ul>
+&lt;li>必须使用单引号包裹&lt;/li>
+&lt;li>&lt;code>BEGIN`` END&lt;/code> 必须大写(它们是预定义好的、特殊的&lt;code>pattern&lt;/code>)&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>参数含义
+&lt;ul>
+&lt;li>&lt;code>-F&lt;/code> 指定分隔符，支持正则，可指定多个分隔符
+&lt;ul>
+&lt;li>例如： &lt;code>-F &amp;quot;[ ,]&amp;quot;&lt;/code> 指定空格和逗号作分隔符&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>-v&lt;/code> 指定变量
+&lt;ul>
+&lt;li>例如： &lt;code>-v FS=&amp;quot;[ ,]&amp;quot;&lt;/code> 指定空格和逗号作分隔符&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>-f&lt;/code>指定脚本文件&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>BEGIN{}&lt;/code> 执行前的语句块
+&lt;ul>
+&lt;li>可以预定义变量，&lt;code>BEGIN{FS=&amp;quot;[ ,]&amp;quot;}&lt;/code> 指定空格和逗号作分隔符&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>[pattern]{}&lt;/code> 执行中的语句块
+&lt;ul>
+&lt;li>对 &lt;code>[pattern]&lt;/code>匹配的行，执行&lt;code>{}&lt;/code>中的语句&lt;/li>
+&lt;li>&lt;code>[pattern]&lt;/code> 匹配筛选条件
+&lt;ul>
+&lt;li>使用 关系、逻辑、匹配或不匹配 运算符&lt;/li>
+&lt;li>为空代表不筛选&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;code>END{}&lt;/code> 执行后的语句块&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>awk是一种文本处理&lt;strong>语言&lt;/strong>， 支持 变量，运算符、表达式、流程控制、函数 等&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>运算符&lt;/p>
+&lt;ul>
+&lt;li>赋值运算符： = += -= *= /= %= ^= **=&lt;/li>
+&lt;li>关系运算符： &amp;lt; &amp;lt;= &amp;gt; &amp;gt;= != ==&lt;/li>
+&lt;li>逻辑运算符： &amp;amp;&amp;amp; || !&lt;/li>
+&lt;li>匹配运算符： ~ !~&lt;/li>
+&lt;li>空格 ： 字符串连接&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>流程控制&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062137005.png"
+loading="lazy"
+alt="image-20230406213754983"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>常用系统变量&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>FS&lt;/code> 字段分隔符，默认空格&lt;/li>
+&lt;li>&lt;code>OFS&lt;/code> 输出字段分隔符，默认空格&lt;/li>
+&lt;li>&lt;code>RS&lt;/code> 记录分隔符，默认\n&lt;/li>
+&lt;li>&lt;code>ORS&lt;/code> 输出记录分隔符， 默认是\n&lt;/li>
+&lt;li>&lt;code>NF&lt;/code> 一行的字段数&lt;/li>
+&lt;li>&lt;code>NR&lt;/code> 当前的所在的行数&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>内置函数示例&lt;/p>
+&lt;p>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062139439.png"
+loading="lazy"
+alt="image-20230406213903410"
+>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>自定义函数示例&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062139312.png"
+loading="lazy"
+alt="image-20230406213948277"
+>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>
+&lt;p>awk程序语法详见 awk用户手册&lt;code>man awk&lt;/code>&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="24-引言中awk命令解析">2.4 引言中awk命令解析&lt;/h3>
+&lt;p>&lt;code>seq 10 | awk '{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{sub(&amp;quot;.$&amp;quot;, &amp;quot;&amp;quot;, s);print s}'&lt;/code>&lt;/p>
+&lt;ol>
+&lt;li>使用全局变量s（默认初始化为空字符串）, 拼接字符串
+&lt;code>seq 10 | awk '{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{print s}'&lt;/code>&lt;/li>
+&lt;li>把最后一个字符替替换成空， &lt;code>sub&lt;/code>是awk内置函数
+&lt;code>seq 10 | awk '{s=s&amp;quot;\&amp;quot;&amp;quot;$0&amp;quot;\&amp;quot;,&amp;quot;} END{sub(&amp;quot;.$&amp;quot;, &amp;quot;&amp;quot;, s);print s}'&lt;/code>
+注：全局拼接这种方式效率较低，不建议使用。练习使用awk是可以的。&lt;/li>
+&lt;/ol>
+&lt;h2 id="3-实践应用">3. 实践应用&lt;/h2>
+&lt;h3 id="31-背景">3.1 背景&lt;/h3>
+&lt;p>由于某次线上故障，部分统计数据缺失，需要从日志中解析出缺失的数据&lt;/p>
+&lt;h3 id="32-目标">3.2 目标&lt;/h3>
+&lt;p>从日志中解析出：date, time, reviewChannelId, taskType, reviewer, elements数组长度&lt;/p>
+&lt;ul>
+&lt;li>日志示例&lt;/li>
+&lt;li>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062143396.webp"
+loading="lazy"
+alt="d2f023672dac4ec7974277f0ab7ea184"
+>&lt;/li>
+&lt;li>解析结果示例
+2023-02-11,21:13:49,1006,130000,tom,1&lt;/li>
+&lt;/ul>
+&lt;h3 id="33-分析">3.3 分析&lt;/h3>
+&lt;p>其他的字段都可以通过截取日志一部分得到， elements的长度没有打印，怎么得？&lt;/p>
+&lt;p>答：&lt;code>elements数组长度&lt;/code>
+=&lt;code>&amp;quot;CreativeElementVo&amp;quot;关键词出现次数&lt;/code>
+=&lt;code>以&amp;quot;CreativeElementVo&amp;quot; 为分隔符所得字段数-1&lt;/code>&lt;/p>
+&lt;h3 id="34-实践">3.4 实践&lt;/h3>
+&lt;ul>
+&lt;li>脚本执行效果如下&lt;/li>
+&lt;li>&lt;img src="https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062144349.png"
+loading="lazy"
+alt="image-20230406214414325"
+>&lt;/li>
+&lt;li>formalLog.sh 脚本代码如下&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">&lt;span class="cp">#!/bin/bash
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="cp">&lt;/span>&lt;span class="nv">fileName&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">cat &lt;span class="nv">$fileName&lt;/span> &lt;span class="p">|&lt;/span> &lt;span class="k">while&lt;/span> &lt;span class="nb">read&lt;/span> line &lt;span class="p">;&lt;/span> &lt;span class="k">do&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 预处理：截取需要的部分&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">subLine&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="k">$(&lt;/span>&lt;span class="nb">echo&lt;/span> &lt;span class="nv">$line&lt;/span> &lt;span class="p">|&lt;/span> awk -F &lt;span class="s1">&amp;#39;@message|reasons=&amp;#39;&lt;/span> &lt;span class="s1">&amp;#39;{print $2}&amp;#39;&lt;/span>&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 获取：elements数组长度&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">elementCount&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="k">$(&lt;/span>&lt;span class="nb">echo&lt;/span> &lt;span class="nv">$subLine&lt;/span> &lt;span class="p">|&lt;/span> awk -F &lt;span class="s1">&amp;#39;CreativeElementVo&amp;#39;&lt;/span> &lt;span class="s1">&amp;#39;{print (NF-1)}&amp;#39;&lt;/span>&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 获取：reviewChannelId，taskType，reviewer&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">mess&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="k">$(&lt;/span>&lt;span class="nb">echo&lt;/span> &lt;span class="nv">$subLine&lt;/span> &lt;span class="p">|&lt;/span> awk &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> -F &lt;span class="s2">&amp;#34;reviewChannelId=|, taskType=|, reviewer=|, reviewStatus=&amp;#34;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> -v &lt;span class="nv">OFS&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;,&amp;#39;&lt;/span> &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> &lt;span class="s1">&amp;#39;{print $(NF-3),$(NF-2),$(NF-1)}&amp;#39;&lt;/span>&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 获取时间&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nv">dt&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="k">$(&lt;/span>&lt;span class="nb">echo&lt;/span> &lt;span class="nv">$subLine&lt;/span> &lt;span class="p">|&lt;/span> awk -F &lt;span class="s2">&amp;#34; &amp;#34;&lt;/span> -v &lt;span class="nv">OFS&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;,&amp;#39;&lt;/span> &lt;span class="s1">&amp;#39;{print $3,$4}&amp;#39;&lt;/span>&lt;span class="k">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># 输出目标内容&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">echo&lt;/span> &lt;span class="nv">$dt&lt;/span>,&lt;span class="nv">$mess&lt;/span>,&lt;span class="nv">$elementCount&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">done&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>
