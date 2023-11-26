@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Categories on 大白熊&#39;s Blog</title>
+        <title>Categories on 白熊&#39;s Blog</title>
         <link>https://graduatehan.github.io/categories/</link>
-        <description>Recent content in Categories on 大白熊&#39;s Blog</description>
+        <description>Recent content in Categories on 白熊&#39;s Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-CN</language>
         <managingEditor>xxx@gmail.com (白熊)</managingEditor>
         <webMaster>xxx@gmail.com (白熊)</webMaster>
         <lastBuildDate>Sat, 25 Nov 2023 08:59:58 +0800</lastBuildDate><atom:link href="https://graduatehan.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>Linux Shell</title>
-        <link>https://graduatehan.github.io/categories/linux-shell/</link>
+        <title>LinuxShell</title>
+        <link>https://graduatehan.github.io/categories/linuxshell/</link>
         <pubDate>Sat, 25 Nov 2023 08:59:58 +0800</pubDate>
         <author>xxx@gmail.com (白熊)</author>
-        <guid>https://graduatehan.github.io/categories/linux-shell/</guid>
+        <guid>https://graduatehan.github.io/categories/linuxshell/</guid>
         <description></description>
         </item>
         <item>
