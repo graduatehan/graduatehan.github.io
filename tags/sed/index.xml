@@ -116,21 +116,21 @@ sed 可依照脚本的指令来处理、编辑文本文件。sed 主要用来自
 &lt;li>
 &lt;p>sed的工作方式&lt;/p>
 &lt;ol>
-&lt;li>
-&lt;p>从文件或者标准输入(input stream)中读取一行到模式空间（pattern space）中&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>一系列指令处理输入行(指令中可能用到保持空间hold space)&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>把处理结果输出到标准输出&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>重复执行step1~step3，直到输入处理完毕&lt;/p>
-&lt;/li>
+&lt;li>从文件或者标准输入(input stream)中读取一行到模式空间（pattern space）中&lt;/li>
+&lt;li>一系列指令处理输入行(指令中可能用到保持空间hold space)&lt;/li>
+&lt;li>把处理结果输出到标准输出&lt;/li>
+&lt;li>重复执行step1~step3，直到输入处理完毕&lt;/li>
 &lt;/ol>
-&lt;pre>&lt;code>![image (7)](https://paper-picture-1302544412.cos.ap-beijing.myqcloud.com/pic/202304062131685.png)
-&lt;/code>&lt;/pre>
+&lt;p>&lt;img src="https://graduatehan.github.io/p/linux-shell-%E5%91%BD%E4%BB%A4-awksed/202304062131685.png"
+width="2019"
+height="1019"
+srcset="https://graduatehan.github.io/p/linux-shell-%E5%91%BD%E4%BB%A4-awksed/202304062131685_hu0831091f1edc13bf5ffca10686dee0d7_131523_480x0_resize_box_3.png 480w, https://graduatehan.github.io/p/linux-shell-%E5%91%BD%E4%BB%A4-awksed/202304062131685_hu0831091f1edc13bf5ffca10686dee0d7_131523_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="patternSpace"
+class="gallery-image"
+data-flex-grow="198"
+data-flex-basis="475px"
+>&lt;/p>
 &lt;/li>
 &lt;li>
 &lt;p>语法：&lt;code>sed [-nri] [-e&amp;lt;script&amp;gt;] [-f&amp;lt;script文件&amp;gt;] [文本文件]&lt;/code>&lt;/p>
